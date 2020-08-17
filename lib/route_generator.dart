@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:omi_first_app/main.dart';
 import 'about_us.dart';
 import 'content_listing.dart';
 import 'content_list_view.dart';
+import 'landing_page.dart';
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
     final args = settings.arguments;
-
+    print(args);
     switch (settings.name) {
-      case '/':
-        return MaterialPageRoute(builder: (_) => LandingPage());
       case '/aboutus':
         return MaterialPageRoute(
-          builder: (_) => AboutUsPage(),
+          builder: (_) => AboutUsPage(data: args),
         );
       case '/content_listing':
-        return MaterialPageRoute(builder: (_) => Content_Listing());
+        return MaterialPageRoute(builder: (_) => Content_Listing(data: args));
       case '/content_list_view':
         return MaterialPageRoute(
           builder: (_) => ContentListView(data: args),

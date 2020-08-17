@@ -1,4 +1,4 @@
-package com.company.omi_first_app
+package com.mtkdev.myanmarlaw
 
 import io.flutter.embedding.android.FlutterActivity
 

@@ -1,16 +1,24 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
+import 'langbrain.dart';
 import 'databrain.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
+// ignore: camel_case_types
 class Content_Listing extends StatelessWidget {
+  final Lang data;
+
+  Content_Listing({
+    Key key,
+    @required this.data,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.redAccent,
+        backgroundColor: Color(0xffcc0000),
         title: Text(
-          "ရပ်ကွက် သို့မဟုတ် ကျေးရွာအုပ်ချုပ်ရေးဥပဒေ",
+          data.appBarTitle,
           style: TextStyle(fontSize: 15),
         ),
       ),
@@ -20,14 +28,16 @@ class Content_Listing extends StatelessWidget {
             Expanded(
               flex: 1,
               child: Center(
-                child: Text("မာတိကာ"),
+                child: data.lang == "mm"
+                    ? Text("မာတိကာ")
+                    : Text("Table of Contents"),
               ),
             ),
             Expanded(
               flex: 16,
               child: FutureBuilder(
                 future: DefaultAssetBundle.of(context)
-                    .loadString('load-json/content_data.json'),
+                    .loadString("load-json/content_data${data.lang}.json"),
                 builder: (context, AsyncSnapshot snapshot) {
                   if (snapshot.hasData) {
                     var mydata = jsonDecode(snapshot.data.toString());
@@ -56,11 +66,12 @@ class Content_Listing extends StatelessWidget {
                                       child: Card(
                                         child: ListTile(
                                           leading: CircleAvatar(
-                                            backgroundColor: Colors.redAccent,
+                                            backgroundColor: Color(0xffcc0000),
                                             child: Text(
                                               mydata[index]['index'],
                                               style: TextStyle(
-                                                  color: Colors.white),
+                                                  color: Colors.white,
+                                                  fontSize: 17.0),
                                             ),
                                           ),
                                           title: Text(mydata[index]['title']),
@@ -81,7 +92,7 @@ class Content_Listing extends StatelessWidget {
                     );
                   } else {
                     return SpinKitSquareCircle(
-                      color: Colors.redAccent,
+                      color: Color(0xffcc0000),
                       size: 50.0,
                     );
                   }

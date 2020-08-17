@@ -1,35 +1,20 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'route_generator.dart';
-import 'langbrain.dart';
-import 'launcher_worker.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_custom_clippers/flutter_custom_clippers.dart';
+import 'langbrain.dart';
 import 'dart:convert';
+import 'launcher_worker.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-// import 'package:custom_switch/custom_switch.dart';
 
-void main() => runApp(MyApp());
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-        home: LandingPage(),
-        initialRoute: '/',
-        onGenerateRoute: RouteGenerator.generateRoute);
-  }
-}
-
-class LandingPage extends StatefulWidget {
-  @override
-  _LandingPageState createState() => _LandingPageState();
-}
-
-class _LandingPageState extends State<LandingPage> {
+// ignore: must_be_immutable
+class LandingPage extends StatelessWidget {
   LauncherWorker launcherWorker = LauncherWorker();
-  var lang = "eng";
-  bool isSwitched = false;
+  final Lang data;
+
+  LandingPage({
+    Key key,
+    @required this.data,
+  }) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -40,7 +25,7 @@ class _LandingPageState extends State<LandingPage> {
           Expanded(
             child: FutureBuilder(
               future: DefaultAssetBundle.of(context)
-                  .loadString("load-json/landing_page$lang.json"),
+                  .loadString("load-json/landing_page${data.lang}.json"),
               // ignore: missing_return
               builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.hasData) {
@@ -58,7 +43,7 @@ class _LandingPageState extends State<LandingPage> {
                             child: Container(
                                 child: Column(
                               children: <Widget>[
-                                SizedBox(height: 30),
+                                SizedBox(height: 40),
                                 Center(
                                   child: Padding(
                                     padding: const EdgeInsets.symmetric(
@@ -83,20 +68,6 @@ class _LandingPageState extends State<LandingPage> {
                         child: Column(
                           children: <Widget>[
                             SizedBox(height: 10),
-                            RaisedButton(
-                              onPressed: () {
-                                setState(() {
-                                  if (lang == "eng") {
-                                    lang = "mm";
-                                  } else {
-                                    lang = "eng";
-                                  }
-                                });
-                              },
-                              child: lang == "mm"
-                                  ? Text("English")
-                                  : Text("မြန်မာ"),
-                            ),
                             Padding(
                               padding: EdgeInsets.symmetric(vertical: 20.0),
                               child: Image(
@@ -106,7 +77,7 @@ class _LandingPageState extends State<LandingPage> {
                               ),
                             ),
                             SizedBox(
-                              height: 5.0,
+                              height: 15.0,
                             ),
                             Text(
                               mydata['SharingStatus'],
@@ -123,7 +94,7 @@ class _LandingPageState extends State<LandingPage> {
                               ),
                               onPressed: () => Navigator.of(context).pushNamed(
                                   '/aboutus',
-                                  arguments: Lang(lang: lang)),
+                                  arguments: Lang(lang: data.lang)),
                             ),
                             SizedBox(
                               height: 15.0,
@@ -171,42 +142,49 @@ class _LandingPageState extends State<LandingPage> {
                       ),
                       Expanded(
                         flex: 1,
-                        child: ClipPath(
-                          clipper: OvalTopBorderClipper(),
-                          child: Container(
-                            height: 600,
-                            width: 500,
-                            color: Color(0xffcc0000),
-                            child: FlatButton(
-                              onPressed: () {
-                                if (lang == "mm") {
-                                  Navigator.of(context).pushNamed(
-                                      '/content_listing',
-                                      arguments: Lang(
-                                          lang: lang,
-                                          appBarTitle:
-                                              "ရပ်ကွက် (သို့မဟုတ်) ကျေးရွာအုပ်ချုပ်ရေးဥပဒေ"));
-                                } else {
-                                  Navigator.of(context).pushNamed(
-                                      '/content_listing',
-                                      arguments: Lang(
-                                          lang: lang,
-                                          appBarTitle:
-                                              "The Ward or Village Tract Administration Law"));
-                                }
-                              },
-                              child: Center(
-                                child: Text(
-                                  mydata['StartText'],
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20.0),
+                        child: FlatButton(
+                          onPressed: () {
+                            if (data.lang == "mm") {
+                              Navigator.of(context).pushNamed(
+                                  '/content_listing',
+                                  arguments: Lang(
+                                      lang: data.lang,
+                                      appBarTitle:
+                                          "ရပ်ကွက် (သို့မဟုတ်) ကျေးရွာအုပ်ချုပ်ရေးဥပဒေ"));
+                            } else {
+                              Navigator.of(context).pushNamed(
+                                  '/content_listing',
+                                  arguments: Lang(
+                                      lang: data.lang,
+                                      appBarTitle:
+                                          "The Ward or Village Tract Administration Law"));
+                            }
+                          },
+                          // onPressed: () => Navigator.of(context).pushNamed(
+                          //   '/content_listing',
+                          //   arguments: Lang(
+                          //       lang: data.lang,
+                          //       appBarTitle: "This is app bar title"
+                          //       ),
+                          // ),
+                          padding: EdgeInsets.all(0),
+                          child: ClipPath(
+                            clipper: OvalTopBorderClipper(),
+                            child: Container(
+                              height: 600,
+                              width: 500,
+                              color: Color(0xffF4433A),
+                              child: Container(
+                                child: Center(
+                                  child: Text(
+                                    mydata['StartText'],
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20.0),
+                                  ),
                                 ),
                               ),
                             ),
-                            // shape: RoundedRectangleBorder(
-                            //     borderRadius: BorderRadius.only(
-                            //         topLeft: Radius.circular(90.0))),
                           ),
                         ),
                       ),
@@ -214,7 +192,7 @@ class _LandingPageState extends State<LandingPage> {
                   );
                 } else {
                   return SpinKitSquareCircle(
-                    color: Color(0xffF4433A),
+                    color: Colors.redAccent,
                     size: 50.0,
                   );
                 }
@@ -222,47 +200,6 @@ class _LandingPageState extends State<LandingPage> {
             ),
           )
         ]),
-      ),
-    );
-  }
-}
-
-class LangSwtichingPage extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Color(0xffF4433A),
-      body: SafeArea(
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "ဘာသာစကား ရွေးချယ်ပါ",
-                style: TextStyle(color: Colors.white),
-              ),
-              Text(
-                "Choose your Language",
-                style: TextStyle(color: Colors.white),
-              ),
-              SizedBox(height: 30.0),
-              RaisedButton(
-                onPressed: () => Navigator.of(context).pushNamed(
-                  '/landing',
-                  arguments: Lang(lang: "mm"),
-                ),
-                child: Text("မြန်မာ"),
-              ),
-              RaisedButton(
-                onPressed: () => Navigator.of(context).pushNamed(
-                  '/landing',
-                  arguments: Lang(lang: "eng"),
-                ),
-                child: Text("English"),
-              ),
-            ],
-          ),
-        ),
       ),
     );
   }
